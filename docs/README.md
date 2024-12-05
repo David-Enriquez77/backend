@@ -1,6 +1,6 @@
 # Consulta Web
 
-This project is a web application designed to consult information in a database via API using Django REST framework and React
+This project is a web application designed to consult information in a database via API using Django REST framework and React, Iit is divided in two separate repos, one from backend (this one), and one from the frontend [frontend_repo](https://github.com/David-Enriquez77/frontend)
 
 ## Content
 
