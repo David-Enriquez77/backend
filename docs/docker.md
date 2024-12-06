@@ -1,6 +1,6 @@
 # Docker
 
-## Servicios
+## Services
 
 1. **db**: Container for postgresql
    2 **pgadmin**: Graphic interface for the database
