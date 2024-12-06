@@ -13,4 +13,4 @@
 - git clone (link to the repos)
 - cd your-repo
 
-2. Configure the environments for both backend and frontend [Go_to](backend.md) and [go_to](frontend.md)
+2. Configure the environments for both backend and frontend [Go_to_backend.md](backend.md) and [go_to_frontend.md](frontend.md)
