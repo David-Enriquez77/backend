@@ -10,7 +10,7 @@
 
 1. Clone the repo
 
-git clone (link to the repos)
-cd your-repo
+- git clone (link to the repos)
+- cd your-repo
 
 2. Configure the environments for both backend and frontend [Go_to](backend.md) and [go_to](frontend.md)
