@@ -77,14 +77,7 @@ WSGI_APPLICATION = 'consultaweb.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-       "default": {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cweb',
-        'USER': 'postgres',
-        'PASSWORD': 'F1sc4l14-admin.2024',
-        'HOST': '10.18.120.42',
-        'PORT': '5433',
-       }
+   
    }
 
 # Password validation
