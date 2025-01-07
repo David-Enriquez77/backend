@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,7 +27,7 @@ SECRET_KEY = 'django-insecure-nvl&+-3ugb0cjy3^mtio6ist2@wt6hc%m1ii6cw87u=5w*vg6i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,12 +39,41 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #rest app
     'rest_framework',
-    'consultaweb.apps.consultas_api'
+    #user app
+    'consultaweb.apps.users',
+    #jwt token app
+    'rest_framework_simplejwt',
+    #cors
+    'corsheaders',
     
 ]
+#Cors configuration
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Frontend domain
+]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "authorization",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -106,6 +137,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -127,3 +168,92 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#model used for authentication
+AUTH_USER_MODEL = 'users.CustomUser'
+# simple jwt configuration
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Life of the token
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Life of the refresh token
+    'ROTATE_REFRESH_TOKENS': True,  # Automatically renew refresh token
+    'BLACKLIST_AFTER_ROTATION': True,  # Invalidate old token
+}
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {message}", # Logging type
+            "style": "{",
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        "info_file": {
+            "level": "INFO",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, 'consultaweb/logs/info_logs/consultaweb_info_logs.log'), # Info log Pathing
+            "when": "midnight",  # Daily rotation
+            "interval": 1,       # New log each 7 days
+            "backupCount": 0,    # Keep the files, dont delete them
+            "formatter": "verbose",
+            "encoding": "utf-8",
+        },
+        "warning_file": {
+            "level": "WARNING",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, 'consultaweb/logs/warning_logs/consultaweb_warning_logs.log'), # Warning log Pathing
+            "when": "midnight",  # Daily rotation
+            "interval": 1,       # New log each 7 days
+            "backupCount": 0,    # Keep the files, dont delete them
+            "formatter": "verbose",
+            "encoding": "utf-8",
+        },
+        "error_file": {
+            "level": "ERROR",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, 'consultaweb/logs/error_logs/consultaweb_error_logs.log'), # Error log Pathing
+            "when": "midnight",  # Daily rotation
+            "interval": 1,       # New log each 7 days
+            "backupCount": 0,    # Keep the files, dont delete them
+            "formatter": "verbose",
+            "encoding": "utf-8",
+        },
+        "general_file": {
+            "level": "DEBUG",
+            "class": "logging.handlers.TimedRotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, 'consultaweb/logs/general_logs/consultaweb_general_logs.log'), # General (All) logs pathing
+            "when": "midnight",   # Daily rotation
+            "interval": 1,        # New log each 7 days
+            "backupCount": 0,     # Keep the files, dont delete them
+            "formatter": "verbose",
+            "encoding": "utf-8",
+        },
+    },
+    'loggers': {
+        'info_logger': {
+            'handlers': ['info_file', 'general_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'warning_logger': {
+            'handlers': ['warning_file', 'general_file'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+        'error_logger': {
+            'handlers': ['error_file', 'general_file'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'general_logger': {
+            'handlers': ['general_file'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}

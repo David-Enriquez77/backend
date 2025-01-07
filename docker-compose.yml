@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   db:
     image: postgres:14.10
@@ -6,12 +8,13 @@ services:
     volumes:
       - ./data/db:/var/lib/postgresql/data
     environment:
-      - DATABASE_HOST=127.0.0.1
       - POSTGRES_DB=my_database
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
     ports:
       - "5433:5432"
+    networks:
+      - app-network
 
   pgadmin:
     image: dpage/pgadmin4
@@ -23,6 +26,8 @@ services:
       - "80:80"
     depends_on:
       - db
+    networks:
+      - app-network
 
   web:
     build: .
@@ -38,5 +43,12 @@ services:
       - POSTGRES_NAME=my_database
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+      - DATABASE_HOST=postgresql # Cambié esto para usar el nombre del contenedor de la base de datos
     depends_on:
       - db
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
